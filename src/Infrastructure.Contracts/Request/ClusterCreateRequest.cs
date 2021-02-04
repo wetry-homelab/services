@@ -1,4 +1,4 @@
-﻿namespace Application.Contracts.Request
+﻿namespace Infrastructure.Contracts.Request
 {
     public class ClusterCreateRequest
     {

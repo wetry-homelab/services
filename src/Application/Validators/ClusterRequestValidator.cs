@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Request;
+﻿using Infrastructure.Contracts.Request;
 using FluentValidation;
 
 namespace Application.Validators

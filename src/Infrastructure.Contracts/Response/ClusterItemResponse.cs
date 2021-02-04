@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Application.Contracts.Response
+namespace Infrastructure.Contracts.Response
 {
     public class ClusterItemResponse
     {

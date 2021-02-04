@@ -1,4 +1,4 @@
-using Application.Contracts.Request;
+using Infrastructure.Contracts.Request;
 using Application.Interfaces;
 using Application.Mappers;
 using Application.Validators;

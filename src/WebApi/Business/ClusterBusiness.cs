@@ -1,5 +1,5 @@
-﻿using Application.Contracts.Request;
-using Application.Contracts.Response;
+﻿using Infrastructure.Contracts.Request;
+using Infrastructure.Contracts.Response;
 using Application.Interfaces;
 using Application.Messages;
 using AutoMapper;

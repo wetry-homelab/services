@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Response;
+﻿using Infrastructure.Contracts.Response;
 using Application.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Logging;

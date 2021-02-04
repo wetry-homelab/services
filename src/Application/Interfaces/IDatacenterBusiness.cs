@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Response;
+﻿using Infrastructure.Contracts.Response;
 using System.Threading.Tasks;
 
 namespace Application.Interfaces

@@ -1,4 +1,4 @@
-﻿using Application.Contracts.Response;
+﻿using Infrastructure.Contracts.Response;
 using AutoMapper;
 using Domain.Entities;
 
