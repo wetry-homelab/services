@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Datacenter.Service.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DatacenterController : ControllerBase
     {
         private readonly ILogger<DatacenterController> logger;

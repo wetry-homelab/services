@@ -38,7 +38,13 @@ namespace Datacenter.Service
 
             services.AddSharedInfrastructure();
             services.AddPersistenceInfrastructure(Configuration);
-
+            services.AddCors(cors =>
+            {
+                cors.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
             AddBusinessLayer(services);
         }
 
@@ -59,6 +65,7 @@ namespace Datacenter.Service
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthorization();
