@@ -51,6 +51,7 @@ namespace Datacenter.Service
         private void AddBusinessLayer(IServiceCollection services)
         {
             services.AddScoped<IDatacenterBusiness, DatacenterBusiness>();
+            services.AddScoped<ISshKeyBusiness, SshKeyBusiness>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

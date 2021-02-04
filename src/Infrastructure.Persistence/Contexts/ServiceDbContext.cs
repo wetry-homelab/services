@@ -8,6 +8,8 @@ namespace Infrastructure.Persistence.Contexts
     {
         public DbSet<Cluster> Cluster { get; set; }
         public DbSet<DatacenterNode> DatacenterNode { get; set; }
+        public DbSet<SshKey> SshKey { get; set; }
+        public DbSet<Template> Template { get; set; }
 
         public ServiceDbContext(DbContextOptions<ServiceDbContext> options)
             : base(options)
