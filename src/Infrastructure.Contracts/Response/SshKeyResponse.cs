@@ -12,5 +12,11 @@ namespace Infrastructure.Contracts.Response
 
         [JsonPropertyName("fingerprint")]
         public string Fingerprint { get; set; }
+
+        [JsonPropertyName("pemAvailable")]
+        public bool PemAvailable { get; set; }
+
+        [JsonPropertyName("ppkAvailable")]
+        public bool PpkAvailable { get; set; }
     }
 }
