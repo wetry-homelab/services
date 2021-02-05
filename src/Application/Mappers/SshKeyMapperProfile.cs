@@ -4,9 +4,9 @@ using Infrastructure.Contracts.Response;
 
 namespace Application.Mappers
 {
-    public class SshKeyMapper : Profile
+    public class SshKeyMapperProfile : Profile
     {
-        public SshKeyMapper()
+        public SshKeyMapperProfile()
         {
             CreateMap<SshKey, SshKeyResponse>()
                 .ForMember(m => m.PemAvailable, m => m.MapFrom(s => !string.IsNullOrEmpty(s.Pem)))

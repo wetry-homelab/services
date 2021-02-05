@@ -19,10 +19,18 @@ namespace Domain.Entities
         [Required]
         public string BaseTemplate { get; set; }
 
+        [Required]
         public int CpuCount { get; set; } = 1;
 
+        [Required]
         public int MemoryCount { get; set; } = 1024;
 
+        [Required]
         public int DiskSpace { get; set; } = 20;
+
+        [Required]
+        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? DeleteAt { get; set; }
     }
 }

@@ -98,7 +98,7 @@ namespace Datacenter.Service.Business
             var fingerprint = sshKey.GenFingerprint();
             exportedPrivateKey = sshKey.ToOpenSshPrivateKey(exportEncrypted);
             exportedPpkKey = sshKey.ToPuttyPrivateKey(exportEncrypted);
-            exportedPublicKey = sshKey.ToRfc4716PublicKey();
+            exportedPublicKey = sshKey.ToOpenSshPublicKey();
 
             var keyToInsert = new SshKey()
             {

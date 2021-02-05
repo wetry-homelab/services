@@ -14,13 +14,11 @@ namespace Domain.Entities
         [Required]
         public string Public { get; set; }
 
-        [Required]
         public string Private { get; set; }
 
         [Required]
         public string Fingerprint { get; set; }
 
-        [Required]
         public string Pem { get; set; }
 
         [Required]
