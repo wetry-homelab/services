@@ -34,7 +34,7 @@ namespace Datacenter.Service.Business
         {
             var dbKey = await sshKeyRepository.ReadAsync(id);
 
-            if(dbKey != null)
+            if (dbKey != null)
             {
                 dbKey.DeleteAt = DateTime.UtcNow;
 
@@ -42,6 +42,21 @@ namespace Datacenter.Service.Business
             }
 
             return false;
+        }
+
+        public async Task<SshKeyDownloadResponse> DownloadAsync(int id, string type)
+        {
+            var dbKey = await sshKeyRepository.ReadAsync(id);
+
+            if (dbKey != null)
+            {
+                if (type == "PEM")
+                    return new SshKeyDownloadResponse() { Type = type, Name = $"{dbKey.Name}.pem", Content = dbKey.Pem };
+                else
+                    return new SshKeyDownloadResponse() { Type = type, Name = $"{dbKey.Name}.ppk", Content = dbKey.Pem };
+            }
+
+            return null;
         }
 
 

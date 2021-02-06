@@ -31,6 +31,13 @@ namespace Datacenter.Service.Controllers
             return Ok(await sshKeyBusiness.ReadKeysAsync());
         }
 
+
+        [HttpGet("{id}/download/{type}")]
+        public async Task<IActionResult> Download([FromRoute] int id, [FromRoute] string type)
+        {
+            return Ok(await sshKeyBusiness.DownloadAsync(id, type));
+        }
+
         [HttpPost]
         public async Task<IActionResult> ImportNewKey([FromBody] SshKeyCreateRequest request)
         {

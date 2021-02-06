@@ -9,5 +9,6 @@ namespace Application.Interfaces
         Task<bool> InsertKeyAsync(SshKeyCreateRequest request);
         Task<SshKeyResponse[]> ReadKeysAsync();
         Task<bool> DeleteKeyAsync(int id);
+        Task<SshKeyDownloadResponse> DownloadAsync(int id, string type);
     }
 }
