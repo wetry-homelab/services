@@ -23,12 +23,12 @@ namespace Infrastructure.Persistence.Repositories
 
         public Task<Cluster> ReadAsync(Expression<Func<Cluster, bool>> predicate)
         {
-            return serviceDbContext.Cluster.FirstOrDefaultAsync(predicate);
+            return serviceDbContext.Cluster.Include(i => i.Nodes).FirstOrDefaultAsync(predicate);
         }
 
         public Task<Cluster[]> ReadsAsync(Expression<Func<Cluster, bool>> predicate)
         {
-            return serviceDbContext.Cluster.Where(predicate).ToArrayAsync();
+            return serviceDbContext.Cluster.Include(i => i.Nodes).Where(predicate).ToArrayAsync();
         }
 
         public Task<int> InsertClusterAsync(Cluster entity)

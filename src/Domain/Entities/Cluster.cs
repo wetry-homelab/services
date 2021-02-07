@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
@@ -28,6 +29,8 @@ namespace Domain.Entities
         [Required]
         public string Ip { get; set; }
 
+        public string KubeConfig { get; set; }
+
         [Required]
         public string SshKey { get; set; }
 
@@ -41,5 +44,6 @@ namespace Domain.Entities
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? DeleteAt { get; set; }
+        public virtual ICollection<ClusterNode> Nodes { get; set; }
     }
 }

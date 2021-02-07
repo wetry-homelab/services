@@ -10,5 +10,6 @@ namespace Application.Interfaces
         Task<ClusterItemResponse[]> ListClusterAsync();
         Task<bool> CreateClusterAsync(ClusterCreateRequest request);
         Task<(bool found, bool update)> UpdateClusterAsync(Guid id, ClusterUpdateRequest request);
+        Task<(bool found, bool update)> DeleteClusterAsync(Guid id);
     }
 }
