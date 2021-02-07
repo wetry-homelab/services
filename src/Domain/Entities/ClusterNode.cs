@@ -8,6 +8,9 @@ namespace Domain.Entities
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
+        [Required]
+        public string Name { get; set; }
+
         public Guid ClusterId { get; set; }
 
         public Cluster Cluster { get; set; }

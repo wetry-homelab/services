@@ -31,6 +31,8 @@ namespace Domain.Entities
 
         public string KubeConfig { get; set; }
 
+        public string KubeConfigJson { get; set; }
+
         [Required]
         public string SshKey { get; set; }
 
