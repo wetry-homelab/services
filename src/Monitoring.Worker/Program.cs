@@ -3,6 +3,8 @@ using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Monitoring.Worker.Business;
+using Monitoring.Worker.Worker;
 
 namespace Monitoring.Worker
 {
@@ -21,6 +23,9 @@ namespace Monitoring.Worker
                 }).ConfigureServices(services =>
                 {
                     services.AddScoped<IClusterRepository, ClusterRepository>();
+                    services.AddScoped<IClusterMonitoringBusiness, ClusterMonitoringBusiness>();
+
+                    services.AddHostedService<ClusterMonitoringWorker>();
                 });
     }
 }

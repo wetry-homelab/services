@@ -13,5 +13,8 @@ namespace Domain.Entities
         public string Type { get; set; }
 
         public Guid ItemId { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; } = DateTime.UtcNow;
     }
 }
