@@ -71,7 +71,14 @@ namespace Application.Validators
                 .LessThan(200)
                 .WithMessage("#MAX_STORAGE#");
 
-            RuleFor(r => r.SshKey)
+            RuleFor(r => r.SshKeyId)
+                .NotEmpty()
+                .WithMessage("#FIELD_REQUIED#")
+                .NotNull()
+                .WithMessage("#FIELD_REQUIED#");
+
+
+            RuleFor(r => r.DeployNodeId)
                 .NotEmpty()
                 .WithMessage("#FIELD_REQUIED#")
                 .NotNull()
