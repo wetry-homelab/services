@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Infrastructure.Contracts.Response
 {
-    public class ClusterItemResponse
+    public class ClusterNodeItemResponse
     {
         [JsonPropertyName("id")]
         public Guid Id { get; set; }
@@ -14,13 +15,5 @@ namespace Infrastructure.Contracts.Response
         public string Ip { get; set; }
         [JsonPropertyName("state")]
         public string State { get; set; }
-        [JsonPropertyName("cpu")]
-        public int Cpu { get; set; }
-        [JsonPropertyName("memory")]
-        public int Memory { get; set; }
-        [JsonPropertyName("disk")]
-        public int Disk { get; set; }
-        [JsonPropertyName("nodes")]
-        public List<ClusterNodeItemResponse> Nodes { get; set; }
     }
 }

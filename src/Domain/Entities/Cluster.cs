@@ -48,7 +48,5 @@ namespace Domain.Entities
         public DateTime? DeleteAt { get; set; }
 
         public virtual ICollection<ClusterNode> Nodes { get; set; }
-
-        public virtual ICollection<ClusterNode> Metrics { get; set; }
     }
 }

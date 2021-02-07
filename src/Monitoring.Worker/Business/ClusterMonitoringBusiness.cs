@@ -36,10 +36,8 @@ namespace Monitoring.Worker.Business
 
             foreach (var cls in clusters)
             {
-                clusterTask.Add(MonitorClusterAsync(cls));
+                await MonitorClusterAsync(cls);
             }
-
-            Task.WaitAll(clusterTask.ToArray());
         }
 
         private async Task MonitorClusterAsync(Domain.Entities.Cluster cluster)
@@ -58,7 +56,8 @@ namespace Monitoring.Worker.Business
 
                 var clusterNodes = await client.ListNodeAsync();
 
-                Task.WaitAll(new Task[] { ProcessStateAsync(cluster, clusterNodes), ProcessMetricsAsync(cluster, client) });
+                await ProcessStateAsync(cluster, clusterNodes);
+                await ProcessMetricsAsync(cluster, client);
             }
             catch (Exception e)
             {
@@ -123,7 +122,7 @@ namespace Monitoring.Worker.Business
                     }
                 }
 
-                var _ = await metricRepository.InsertMetricsAsync(metricsGathered.ToArray());
+                await metricRepository.InsertMetricsWithStrategyAsync(metricsGathered.ToArray());
             }
             catch (Exception e)
             {

@@ -26,8 +26,7 @@ namespace Infrastructure.Persistence.Contexts
 
             modelBuilder.Entity<Cluster>()
                         .HasMany(c => c.Nodes)
-                        .WithOne(n => n.Cluster)
-                        .HasForeignKey(fk => fk.ClusterId);
+                        .WithOne(n => n.Cluster);
         }
     }
 }
