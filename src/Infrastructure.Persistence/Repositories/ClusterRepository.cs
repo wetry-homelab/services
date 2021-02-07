@@ -42,5 +42,10 @@ namespace Infrastructure.Persistence.Repositories
             serviceDbContext.Entry(entity).State = EntityState.Modified;
             return serviceDbContext.SaveChangesAsync();
         }
+
+        public Task<int> GetMaxOrder()
+        {
+            return serviceDbContext.Cluster.MaxAsync(c => c.OrderId);
+        }
     }
 }

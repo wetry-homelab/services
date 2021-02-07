@@ -21,6 +21,7 @@ namespace Datacenter.Worker
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://0.0.0.0:8000", "https://0.0.0.0:8001");
                     webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureServices(services =>

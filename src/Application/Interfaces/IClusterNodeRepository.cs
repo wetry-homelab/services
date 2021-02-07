@@ -9,6 +9,7 @@ namespace Application.Interfaces
     {
         Task<ClusterNode[]> ReadsAsync(Expression<Func<ClusterNode, bool>> predicate);
         Task<int> InsertClusterNodeAsync(ClusterNode entity);
+        Task<int> InsertClusterNodesAsync(ClusterNode[] entity);
         Task<int> UpdateClusterNodeAsync(ClusterNode entity);
         Task<ClusterNode> ReadAsync(Expression<Func<ClusterNode, bool>> predicate);
     }

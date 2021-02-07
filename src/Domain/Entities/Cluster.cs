@@ -10,9 +10,15 @@ namespace Domain.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
+        public int OrderId { get; set; } = 3000;
+
+        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        [Required]
+        public int ProxmoxNodeId { get; set; }
 
         [Required]
         public int Node { get; set; } = 2;

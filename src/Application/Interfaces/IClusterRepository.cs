@@ -11,5 +11,6 @@ namespace Application.Interfaces
         Task<int> UpdateClusterAsync(Cluster entity);
         Task<Cluster> ReadAsync(Expression<Func<Cluster, bool>> predicate);
         Task<Cluster[]> ReadsAsync(Expression<Func<Cluster, bool>> predicate);
+        Task<int> GetMaxOrder();
     }
 }

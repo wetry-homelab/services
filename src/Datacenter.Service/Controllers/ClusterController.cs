@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Infrastructure.Contracts.Request;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -49,9 +50,14 @@ namespace Datacenter.Service.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromBody] ClusterCreateRequest request)
         {
-            return Ok();
+            if ((await clusterBusiness.CreateClusterAsync(request)))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]

@@ -16,6 +16,9 @@ namespace Domain.Entities
         public Cluster Cluster { get; set; }
 
         [Required]
+        public int OrderId { get; set; } = 3000;
+
+        [Required]
         public string Ip { get; set; }
 
         [Required]

@@ -21,8 +21,8 @@ namespace Infrastructure.Shared.Services
             {
                 UserName = configuration["RabbitMq:User"],
                 Password = configuration["RabbitMq:Password"],
-                VirtualHost = configuration["RabbitMq:VirtualHost"],
-                HostName = configuration["RabbitMq:HostName"]
+                HostName = configuration["RabbitMq:HostName"],
+                Port = int.Parse(configuration["RabbitMq:Port"])
             };
 
             this.connectionQueue = factory.CreateConnection();
@@ -49,10 +49,10 @@ namespace Infrastructure.Shared.Services
             try
             {
                 IModel channel = connectionQueue.CreateModel();
-                channel.QueueDeclare(queue: "cluster", true, false, false, null);
+                channel.QueueDeclare(queue: "k3s_queue", false, false, false, null);
 
                 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data));
-                channel.BasicPublish(exchange: exchange, routingKey: routingKey, body: messageBodyBytes, basicProperties: null);
+                channel.BasicPublish(exchange: "", routingKey: "k3s_queue", body: messageBodyBytes, basicProperties: null);
             }
             catch (Exception e)
             {
