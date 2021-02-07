@@ -31,6 +31,8 @@ namespace Infrastructure.Persistence
             services.AddScoped<ISshKeyRepository, SshKeyRepository>();
             services.AddScoped<ITemplateRepository, TemplateRepository>();
             services.AddScoped<IDatacenterRepository, DatacenterRepository>();
+            services.AddScoped<IClusterNodeRepository, ClusterNodeRepository>();
+            services.AddScoped<IMetricRepository, MetricRepository>();
         }
     }
 }

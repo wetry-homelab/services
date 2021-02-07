@@ -15,12 +15,16 @@ namespace Monitoring.Worker.Business
     public class ClusterMonitoringBusiness : IClusterMonitoringBusiness
     {
         private readonly IClusterRepository clusterRepository;
+        private readonly IClusterNodeRepository clusterNodeRepository;
+        private readonly IMetricRepository metricRepository;
         private readonly ILogger<ClusterMonitoringBusiness> logger;
 
-        public ClusterMonitoringBusiness(IClusterRepository clusterRepository, ILogger<ClusterMonitoringBusiness> logger)
+        public ClusterMonitoringBusiness(IClusterRepository clusterRepository, ILogger<ClusterMonitoringBusiness> logger, IClusterNodeRepository clusterNodeRepository, IMetricRepository metricRepository)
         {
             this.clusterRepository = clusterRepository;
             this.logger = logger;
+            this.clusterNodeRepository = clusterNodeRepository;
+            this.metricRepository = metricRepository;
         }
 
         public async Task MonitorClustersAsync(CancellationToken cancellationToken)
@@ -65,7 +69,7 @@ namespace Monitoring.Worker.Business
                         if (node != null)
                         {
                             node.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Status;
-                            // TODO : SAVE NODE STATE
+                            var __ = await clusterNodeRepository.UpdateClusterNodeAsync(node);
                         }
                     }
                 }
@@ -107,6 +111,8 @@ namespace Monitoring.Worker.Business
                                 Value = float.Parse(metric.Usage["memory"].CanonicalizeString())
                             }
                         };
+
+                        var _ = await metricRepository.InsertMetricsAsync(metricsGathered.ToArray());
                     }
                 }
             }
