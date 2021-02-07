@@ -8,11 +8,11 @@ namespace Domain.Entities
         [Key]
         public long Id { get; set; }
 
-        public float Value { get; set; }
+        public long CpuValue { get; set; }
 
-        public string Type { get; set; }
+        public long MemoryValue { get; set; }
 
-        public Guid ItemId { get; set; }
+        public Guid EntityId { get; set; }
 
         [Required]
         public DateTime Date { get; set; } = DateTime.UtcNow;

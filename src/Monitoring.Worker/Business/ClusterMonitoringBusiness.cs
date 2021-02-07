@@ -1,12 +1,11 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using k8s;
-using k8s.KubeConfigModels;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,9 +28,11 @@ namespace Monitoring.Worker.Business
 
         public async Task MonitorClustersAsync(CancellationToken cancellationToken)
         {
-            var clusters = await clusterRepository.ReadsAsync(c => !string.IsNullOrEmpty(c.KubeConfig) && c.DeleteAt == null);
-            var clusterTask = new List<Task>();
+            if (!Directory.Exists("./configs"))
+                Directory.CreateDirectory("./configs");
 
+            var clusters = await clusterRepository.ReadsAsync(c => !string.IsNullOrEmpty(c.KubeConfigJson) && c.DeleteAt == null);
+            var clusterTask = new List<Task>();
 
             foreach (var cls in clusters)
             {
@@ -43,13 +44,26 @@ namespace Monitoring.Worker.Business
 
         private async Task MonitorClusterAsync(Domain.Entities.Cluster cluster)
         {
-            var kubeconfig = JsonSerializer.Deserialize<K8SConfiguration>(cluster.KubeConfigJson);
-            var config = KubernetesClientConfiguration.BuildConfigFromConfigObject(kubeconfig);
-            var client = new Kubernetes(config);
+            try
+            {
+                var filePath = $"./configs/{cluster.Id}/kubeconfig";
 
-            var clusterNodes = await client.ListNodeAsync();
+                if (!File.Exists(filePath))
+                {
+                    await File.WriteAllTextAsync(filePath, cluster.KubeConfig);
+                }
 
-            Task.WaitAll(new Task[] { ProcessStateAsync(cluster, clusterNodes), ProcessMetricsAsync(cluster, client) });
+                var config = KubernetesClientConfiguration.BuildConfigFromConfigFile(filePath);
+                var client = new Kubernetes(config);
+
+                var clusterNodes = await client.ListNodeAsync();
+
+                Task.WaitAll(new Task[] { ProcessStateAsync(cluster, clusterNodes), ProcessMetricsAsync(cluster, client) });
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Fail to connect client.");
+            }
         }
 
         private async Task ProcessStateAsync(Domain.Entities.Cluster cluster, k8s.Models.V1NodeList clusterNodes)
@@ -60,7 +74,7 @@ namespace Monitoring.Worker.Business
                 {
                     if (clusterNode.Metadata.Name.Contains("master"))
                     {
-                        cluster.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Status;
+                        cluster.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Type;
                         var _ = await clusterRepository.UpdateClusterAsync(cluster);
                     }
                     else
@@ -68,7 +82,7 @@ namespace Monitoring.Worker.Business
                         var node = cluster.Nodes.FirstOrDefault(n => n.Name == clusterNode.Metadata.Name);
                         if (node != null)
                         {
-                            node.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Status;
+                            node.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Type;
                             var __ = await clusterNodeRepository.UpdateClusterNodeAsync(node);
                         }
                     }
@@ -85,6 +99,7 @@ namespace Monitoring.Worker.Business
             try
             {
                 var metrics = await client.GetKubernetesNodesMetricsAsync();
+                var metricsGathered = new List<Metric>();
 
                 foreach (var metric in metrics.Items)
                 {
@@ -93,28 +108,22 @@ namespace Monitoring.Worker.Business
 
                     if (node != null)
                         extractItemId = node.Id;
-                    else
-                        extractItemId = node.ClusterId;
+                    else if (metric.Metadata.Name.Contains("master"))
+                        extractItemId = cluster.Id;
 
                     if (extractItemId != Guid.Empty)
                     {
-                        var metricsGathered = new List<Metric>(){
-                            new Metric()
-                            {
-                                ItemId = node.Id,
-                                Type = "cpu",
-                                Value = float.Parse(metric.Usage["cpu"].CanonicalizeString())
-                            }, new Metric()
-                            {
-                                ItemId = node.Id,
-                                Type = "memory",
-                                Value = float.Parse(metric.Usage["memory"].CanonicalizeString())
-                            }
-                        };
+                        metricsGathered.Add(new Metric()
+                        {
+                            EntityId = extractItemId,
+                            CpuValue = long.Parse(metric.Usage["cpu"].CanonicalizeString().Replace("n", "")),
+                            MemoryValue = long.Parse(metric.Usage["memory"].CanonicalizeString().Replace("Ki", ""))
+                        });
 
-                        var _ = await metricRepository.InsertMetricsAsync(metricsGathered.ToArray());
                     }
                 }
+
+                var _ = await metricRepository.InsertMetricsAsync(metricsGathered.ToArray());
             }
             catch (Exception e)
             {

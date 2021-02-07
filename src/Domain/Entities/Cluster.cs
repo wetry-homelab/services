@@ -46,6 +46,9 @@ namespace Domain.Entities
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? DeleteAt { get; set; }
+
         public virtual ICollection<ClusterNode> Nodes { get; set; }
+
+        public virtual ICollection<ClusterNode> Metrics { get; set; }
     }
 }
