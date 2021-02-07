@@ -50,6 +50,7 @@ namespace Datacenter.Service
 
         private void AddBusinessLayer(IServiceCollection services)
         {
+            services.AddScoped<IClusterBusiness, ClusterBusiness>();
             services.AddScoped<IDatacenterBusiness, DatacenterBusiness>();
             services.AddScoped<ISshKeyBusiness, SshKeyBusiness>();
             services.AddScoped<ITemplateBusiness, TemplateBusiness>();

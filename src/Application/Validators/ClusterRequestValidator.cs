@@ -76,18 +76,6 @@ namespace Application.Validators
                 .WithMessage("#FIELD_REQUIED#")
                 .NotNull()
                 .WithMessage("#FIELD_REQUIED#");
-
-            RuleFor(r => r.Ip)
-                .NotEmpty()
-                .WithMessage("#FIELD_REQUIED#")
-                .NotNull()
-                .WithMessage("#FIELD_REQUIED#");
-
-            RuleFor(r => r.Gateway)
-                .NotEmpty()
-                .WithMessage("#FIELD_REQUIED#")
-                .NotNull()
-                .WithMessage("#FIELD_REQUIED#");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
@@ -9,16 +10,18 @@ namespace Datacenter.Service.Controllers
     public class ClusterController : ControllerBase
     {
         private readonly ILogger<ClusterController> logger;
+        private readonly IClusterBusiness clusterBusiness;
 
-        public ClusterController(ILogger<ClusterController> logger)
+        public ClusterController(ILogger<ClusterController> logger, IClusterBusiness clusterBusiness)
         {
             this.logger = logger;
+            this.clusterBusiness = clusterBusiness;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok();
+            return Ok(await clusterBusiness.ListClusterAsync());
         }
 
         [HttpGet("{id}")]
