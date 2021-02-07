@@ -8,7 +8,7 @@
         public int Cpu { get; set; }
         public int Memory { get; set; }
         public int Storage { get; set; }
-        public int? SelectedTemplate { get; set; }
+        public int SelectedTemplate { get; set; }
         public string SshKey { get; set; }
     }
 }
