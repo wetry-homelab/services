@@ -65,6 +65,7 @@ namespace Monitoring.Worker.Business
                         if (node != null)
                         {
                             node.State = clusterNode.Status.Conditions.FirstOrDefault(c => c.Reason == "KubeletReady")?.Status;
+                            // TODO : SAVE NODE STATE
                         }
                     }
                 }
