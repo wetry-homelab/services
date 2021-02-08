@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Contracts.Request;
 using FluentValidation;
 
-namespace Application.Validators
+namespace Infrastructure.Validators
 {
     public class ClusterUpdateRequestValidator : AbstractValidator<ClusterUpdateRequest>
     {

@@ -35,6 +35,18 @@ steps:
     patchVersion: '0'
     configuration: 'Release'
 
+- task: DotNetCoreCLI@2
+  displayName: "DotNet pack"
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/Infrastructure.Validators.csproj'
+    includesymbols: true
+    versioningScheme: 'byPrereleaseNumber'
+    majorVersion: '1'
+    minorVersion: '0'
+    patchVersion: '0'
+    configuration: 'Release'
+
 - task: NuGetCommand@2
   displayName: Push To NuGet
   inputs:
