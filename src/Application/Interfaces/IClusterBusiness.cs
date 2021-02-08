@@ -11,5 +11,7 @@ namespace Application.Interfaces
         Task<bool> CreateClusterAsync(ClusterCreateRequest request);
         Task<(bool found, bool update)> UpdateClusterAsync(Guid id, ClusterUpdateRequest request);
         Task<(bool found, bool update)> DeleteClusterAsync(Guid id);
+        Task<(bool found, bool restart)> RestartClusterMasterAsync(Guid id);
+        Task<(bool found, bool ready, KubeconfigDownloadResponse file)> DownloadKubeconfigAsync(Guid id);
     }
 }

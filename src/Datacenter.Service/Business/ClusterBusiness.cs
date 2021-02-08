@@ -1,8 +1,11 @@
-﻿using Application.Interfaces;
+﻿using Application.Exceptions;
+using Application.Interfaces;
 using Application.Messages;
 using Domain.Entities;
 using Infrastructure.Contracts.Request;
 using Infrastructure.Contracts.Response;
+using Microsoft.Extensions.Configuration;
+using ProxmoxVEAPI.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +21,9 @@ namespace Datacenter.Service.Business
         private readonly ISshKeyRepository sshKeyRepository;
         private readonly IQueueService queueService;
         private readonly ITemplateRepository templateRepository;
+        private readonly IConfiguration configuration;
 
-        public ClusterBusiness(IClusterRepository clusterRepository, IDatacenterRepository datacenterRepository, ISshKeyRepository sshKeyRepository, IClusterNodeRepository clusterNodeRepository, IQueueService queueService, ITemplateRepository templateRepository)
+        public ClusterBusiness(IClusterRepository clusterRepository, IDatacenterRepository datacenterRepository, ISshKeyRepository sshKeyRepository, IClusterNodeRepository clusterNodeRepository, IQueueService queueService, ITemplateRepository templateRepository, IConfiguration configuration)
         {
             this.clusterRepository = clusterRepository;
             this.datacenterRepository = datacenterRepository;
@@ -27,13 +31,18 @@ namespace Datacenter.Service.Business
             this.clusterNodeRepository = clusterNodeRepository;
             this.queueService = queueService;
             this.templateRepository = templateRepository;
+            this.configuration = configuration;
+
+            ConfigureClient.Initialise(configuration["Proxmox:Uri"], configuration["Proxmox:Token"]);
         }
 
         public async Task<bool> CreateClusterAsync(ClusterCreateRequest request)
         {
-            var datacenterNodes = await datacenterRepository.ReadsAsync();
+            if ((await clusterRepository.ReadAsync(c => c.Name == request.Name)) != null)
+                throw new DuplicateException();
+
             var selectedSshKey = await sshKeyRepository.ReadAsync(request.SshKeyId);
-            var selectedNode = datacenterNodes.FirstOrDefault(f => f.Id == request.DeployNodeId);
+            var selectedNode = await datacenterRepository.ReadAsync(f => f.Id == request.DeployNodeId);
             var template = await templateRepository.ReadAsync(t => t.Id == request.SelectedTemplate);
             var existingCluster = await clusterRepository.ReadsAsync(c => c.ProxmoxNodeId == request.DeployNodeId);
 
@@ -80,7 +89,7 @@ namespace Datacenter.Service.Business
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -188,9 +197,61 @@ namespace Datacenter.Service.Business
             throw new NotImplementedException();
         }
 
-        public Task<(bool found, bool update)> DeleteClusterAsync(Guid id)
+        public async Task<(bool found, bool update)> DeleteClusterAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var cluster = await clusterRepository.ReadAsync(c => c.Id == id);
+
+            if (cluster == null)
+                return (false, false);
+
+            cluster.DeleteAt = DateTime.UtcNow;
+
+            if ((await clusterRepository.UpdateClusterAsync(cluster)) > 0)
+            {
+                var nodes = await clusterNodeRepository.ReadsAsync(c => c.ClusterId == cluster.Id && c.DeleteAt == null);
+                var selectedNode = await datacenterRepository.ReadAsync(f => f.Id == cluster.ProxmoxNodeId);
+                var qemuClient = new QemuClient();
+
+                foreach (var node in nodes)
+                {
+                    node.DeleteAt = DateTime.UtcNow;
+                    await qemuClient.DeleteQemu(selectedNode.Name, node.OrderId);
+                    await clusterNodeRepository.UpdateClusterNodeAsync(node);
+                }
+
+                return (true, await qemuClient.DeleteQemu(selectedNode.Name, cluster.OrderId));
+            }
+
+            return (true, false);
+        }
+
+
+        public async Task<(bool found, bool restart)> RestartClusterMasterAsync(Guid id)
+        {
+            var cluster = await clusterRepository.ReadAsync(c => c.Id == id && c.DeleteAt == null);
+            var selectedNode = await datacenterRepository.ReadAsync(f => f.Id == cluster.ProxmoxNodeId);
+            if (cluster == null)
+                return (false, false);
+
+            var qemuClient = new QemuClient();
+
+            return (true, await qemuClient.RestartQemu(selectedNode.Name, cluster.OrderId));
+        }
+
+        public async Task<(bool found, bool ready, KubeconfigDownloadResponse file)> DownloadKubeconfigAsync(Guid id)
+        {
+            var cluster = await clusterRepository.ReadAsync(c => c.Id == id);
+            if (cluster == null)
+                return (false, false, null);
+
+            if (string.IsNullOrEmpty(cluster.KubeConfig))
+                return (true, false, null);
+
+            return (true, true, new KubeconfigDownloadResponse()
+            {
+                Name = $"{cluster.Name}-kubeconfig",
+                Content = cluster.KubeConfig
+            });
         }
     }
 }

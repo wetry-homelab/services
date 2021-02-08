@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="ProxmoxVEAPI.Client" Version="1.0.0-CI-20210204-030759" />
+    <PackageReference Include="ProxmoxVEAPI.Client" Version="1.0.0-CI-20210208-100458" />
   </ItemGroup>
 
   <ItemGroup>

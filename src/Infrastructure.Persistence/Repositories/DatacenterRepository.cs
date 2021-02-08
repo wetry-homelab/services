@@ -2,6 +2,8 @@
 using Domain.Entities;
 using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
@@ -13,6 +15,11 @@ namespace Infrastructure.Persistence.Repositories
         public DatacenterRepository(ServiceDbContext serviceDbContext)
         {
             this.serviceDbContext = serviceDbContext;
+        }
+
+        public Task<DatacenterNode> ReadAsync(Expression<Func<DatacenterNode, bool>> predicate)
+        {
+            return serviceDbContext.DatacenterNode.FirstOrDefaultAsync(predicate);
         }
 
         public Task<DatacenterNode[]> ReadsAsync()

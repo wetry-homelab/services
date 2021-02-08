@@ -82,7 +82,6 @@ namespace Datacenter.Service.Business
                 Public = request.Public
             };
 
-
             if ((await sshKeyRepository.InsertAsync(keyToInsert)) > 0)
             {
                 logger.LogInformation("Key insert.");

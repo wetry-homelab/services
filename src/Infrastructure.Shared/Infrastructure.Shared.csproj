@@ -8,7 +8,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="ProxmoxVEAPI.Client" Version="1.0.0-CI-20210204-030759" />
+    <PackageReference Include="ProxmoxVEAPI.Client" Version="1.0.0-CI-20210208-100458" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
   </ItemGroup>
 
