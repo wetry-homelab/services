@@ -9,6 +9,7 @@ namespace Infrastructure.Shared
         public static void AddSharedInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<ITraefikRedisStore, TraefikRedisStore>();
         }
     }
 }

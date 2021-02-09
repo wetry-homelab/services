@@ -3,8 +3,11 @@ using Application.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Shared.Services
 {
@@ -26,6 +29,32 @@ namespace Infrastructure.Shared.Services
             };
 
             this.connectionQueue = factory.CreateConnection();
+        }
+
+        public async Task OnQueueMessageInit(Action<string> processMessage)
+        {
+            using (var channel = connectionQueue.CreateModel())
+            {
+                channel.QueueBind(queue: "k3s_queue_result",
+                                  exchange: "k3s_queue_result",
+                                  routingKey: "");
+
+                Console.WriteLine(" [*] Waiting for queue.");
+
+                var consumer = new EventingBasicConsumer(channel);
+
+                consumer.Received += (model, ea) =>
+                {
+                    logger.LogInformation("Message receive");
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    processMessage.Invoke(message);
+                };
+
+                channel.BasicConsume(queue: "k3s_queue_result", autoAck: true, consumer: consumer);
+
+                await Task.Delay(-1);
+            }
         }
 
         public void QueueClusterCreation(ClusterCreateMessage message)

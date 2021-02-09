@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Mappers;
 using AutoMapper;
 using Datacenter.Service.Business;
+using Datacenter.Service.Hubs;
 using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Infrastructure.Shared;
@@ -38,6 +39,7 @@ namespace Datacenter.Service
 
             services.AddSharedInfrastructure();
             services.AddPersistenceInfrastructure(Configuration);
+
             services.AddCors(cors =>
             {
                 cors.AddDefaultPolicy(policy =>
@@ -45,6 +47,9 @@ namespace Datacenter.Service
                     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
+            services.AddSignalR();
+
             AddBusinessLayer(services);
         }
 
@@ -76,6 +81,7 @@ namespace Datacenter.Service
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<AppHub>("/app");
             });
         }
     }

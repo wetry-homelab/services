@@ -1,14 +1,18 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces;
 using Application.Messages;
+using Datacenter.Service.Hubs;
 using Domain.Entities;
 using Infrastructure.Contracts.Request;
 using Infrastructure.Contracts.Response;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using ProxmoxVEAPI.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Datacenter.Service.Business
@@ -22,8 +26,13 @@ namespace Datacenter.Service.Business
         private readonly IQueueService queueService;
         private readonly ITemplateRepository templateRepository;
         private readonly IConfiguration configuration;
+        private readonly ITraefikRedisStore traefikCache;
+        private readonly IHubContext<AppHub, IAppHub> hubContext;
 
-        public ClusterBusiness(IClusterRepository clusterRepository, IDatacenterRepository datacenterRepository, ISshKeyRepository sshKeyRepository, IClusterNodeRepository clusterNodeRepository, IQueueService queueService, ITemplateRepository templateRepository, IConfiguration configuration)
+        public ClusterBusiness(IClusterRepository clusterRepository, IDatacenterRepository datacenterRepository, 
+            ISshKeyRepository sshKeyRepository, IClusterNodeRepository clusterNodeRepository, 
+            IQueueService queueService, ITemplateRepository templateRepository, 
+            IConfiguration configuration, ITraefikRedisStore traefikCache, IHubContext<AppHub, IAppHub> hubContext)
         {
             this.clusterRepository = clusterRepository;
             this.datacenterRepository = datacenterRepository;
@@ -32,7 +41,8 @@ namespace Datacenter.Service.Business
             this.queueService = queueService;
             this.templateRepository = templateRepository;
             this.configuration = configuration;
-
+            this.traefikCache = traefikCache;
+            this.hubContext = hubContext;
             ConfigureClient.Initialise(configuration["Proxmox:Uri"], configuration["Proxmox:Token"]);
         }
 
@@ -84,6 +94,8 @@ namespace Datacenter.Service.Business
                     {
                         ClusterCreateMessage message = GenerateQueueMessage(request, newCluster, selectedSshKey, selectedNode, template, baseIp, baseId);
                         queueService.QueueClusterCreation(message);
+
+                        await InjectClusterCacheConfigurationAsync(newCluster);
                     }
 
                     return true;
@@ -91,6 +103,20 @@ namespace Datacenter.Service.Business
             }
 
             return false;
+        }
+
+        private async Task InjectClusterCacheConfigurationAsync(Cluster newCluster)
+        {
+            var values = new List<KeyValuePair<string, string>>();
+            values.Add(new KeyValuePair<string, string>($"traefik/http/routers/{newCluster.Name}/rule", $"Host(`{newCluster.Name}.ice-artefact.com`)"));
+            values.Add(new KeyValuePair<string, string>($"traefik.http.routers.{newCluster.Name}.entrypoints/0", $"web"));
+            values.Add(new KeyValuePair<string, string>($"traefik.http.routers.{newCluster.Name}.entrypoints/1", $"webSecure"));
+            values.Add(new KeyValuePair<string, string>($"traefik/http/routers/{newCluster.Name}/service", $"{newCluster.Name}-http-lb"));
+            values.Add(new KeyValuePair<string, string>($"traefik/http/services/{newCluster.Name}-http-lb/loadbalancer/servers/0/url", $"http://{newCluster.Ip}:80"));
+            values.Add(new KeyValuePair<string, string>($"traefik/http/services/{newCluster.Name}-http-lb/loadbalancer/servers/1/url", $"https://{newCluster.Ip}:443"));
+            values.Add(new KeyValuePair<string, string>($"traefik/http/services/{newCluster.Name}-http-lb/loadbalancer/servers/2/url", $"https://{newCluster.Ip}:6443"));
+
+            await traefikCache.StoreValues(values);
         }
 
         private int ExtractBaseId(int valueMaxOrder)
@@ -157,7 +183,7 @@ namespace Datacenter.Service.Business
                     Master = false,
                     Disk = newCluster.Storage,
                     Memory = newCluster.Memory,
-                    Ip = $"10.0.{selectedNode.Id}.{150 + i + 1}",
+                    Ip = $"10.0.{selectedNode.Id}.{baseIp + i + 1}",
                     ProxmoxNode = selectedNode.Name,
                     Template = template.BaseTemplate
                 };
