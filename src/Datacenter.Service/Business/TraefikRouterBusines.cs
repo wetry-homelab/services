@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Business
+namespace Kubernox.Service.Business
 {
     public class TraefikRouterBusines
     {

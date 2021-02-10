@@ -1,8 +1,8 @@
 using Application.Interfaces;
 using Application.Mappers;
 using AutoMapper;
-using Datacenter.Service.Business;
-using Datacenter.Service.Hubs;
+using Kubernox.Service.Business;
+using Kubernox.Service.Hubs;
 using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Infrastructure.Shared;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace Datacenter.Service
+namespace Kubernox.Service
 {
     public class Startup
     {
@@ -34,7 +34,7 @@ namespace Datacenter.Service
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Datacenter.Service", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kubernox.Service", Version = "v1" });
             });
 
             services.AddSharedInfrastructure();
@@ -68,7 +68,7 @@ namespace Datacenter.Service
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Datacenter.Service v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kubernox.Service v1"));
             }
 
             app.UseHttpsRedirection();

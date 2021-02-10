@@ -1,13 +1,14 @@
 using Application.Interfaces;
-using Datacenter.Service.Business;
-using Datacenter.Service.Workers;
+using Kubernox.Service.Business;
+using Kubernox.Service.Workers;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Shared.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
-namespace Datacenter.Service
+namespace Kubernox.Service
 {
     public class Program
     {
@@ -18,6 +19,10 @@ namespace Datacenter.Service
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                 .ConfigureAppConfiguration((hostingContext, config) =>
+                 {
+                     config.AddEnvironmentVariables();
+                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

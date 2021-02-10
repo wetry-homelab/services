@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kubernox.Model
 {
-    public class RabbitMqProvider : BaseConfigurationItem
+    public class RedisProvider : BaseConfigurationItem
     {
-        public string Virtualhost { get; set; }
-        public int Port { get; set; }
     }
 }

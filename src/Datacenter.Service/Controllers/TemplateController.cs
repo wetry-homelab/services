@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Controllers
+namespace Kubernox.Service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

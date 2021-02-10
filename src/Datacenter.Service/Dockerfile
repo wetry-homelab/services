@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
-COPY ["src/Datacenter.Service/Datacenter.Service.csproj", "src/Datacenter.Service/"]
-RUN dotnet restore "src/Datacenter.Service/Datacenter.Service.csproj"
+COPY ["src/Kubernox.Service/Kubernox.Service.csproj", "src/Kubernox.Service/"]
+RUN dotnet restore "src/Kubernox.Service/Kubernox.Service.csproj"
 COPY . .
-WORKDIR "/src/src/Datacenter.Service"
-RUN dotnet build "Datacenter.Service.csproj" -c Release -o /app/build
+WORKDIR "/src/src/Kubernox.Service"
+RUN dotnet build "Kubernox.Service.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Datacenter.Service.csproj" -c Release -o /app/publish
+RUN dotnet publish "Kubernox.Service.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Datacenter.Service.dll"]
+ENTRYPOINT ["dotnet", "Kubernox.Service.dll"]

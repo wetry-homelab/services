@@ -14,6 +14,21 @@
 # Github : https://github.com/wetry-homelab/kubernox
 
 
+# Configure Proxmox Host
+proxmox:
+    # No default value, custom value required
+    # Values acceptable : xx.xx.xx.xx:port / proxmox.mydomain:port 
+    host:
+    # Default value : kubernox
+    username: root
+    # No default value, custom value required
+    access_token:
+    # No default value, custom value required
+    token_id:
+    # Default value : pam
+    # Possible values : pam / pem
+    auth_type: pam
+
 # Configure database provider
 # Actually only Postgre is supported
 # If nothing is configured, provider deploy own Postgre container
@@ -39,6 +54,10 @@ rabbitmq:
     username: kubernox
     # Default value : kubernoxRabbitMqPassword@0123
     password: kubernoxRabbitMqPassword@0123
+    # Default value : /
+    virtualhost: /
+    # Default value : 5672
+    port: 5672
 
 # Configure cache provider
 # Actually only Redis is supported
@@ -48,3 +67,8 @@ redis:
     host: kubernox_redis
     # Default value : kubernox
     password: kubernoxRedisPassword@0123
+
+# Configure cache provider
+prometheus:
+    # Default value : prometheus.yml
+    path: "prometheus.yml:"

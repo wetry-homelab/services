@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Controllers
+namespace Kubernox.Service.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

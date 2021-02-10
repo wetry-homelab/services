@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Workers
+namespace Kubernox.Service.Workers
 {
     public class ClusterQueueWorker : BackgroundService
     {

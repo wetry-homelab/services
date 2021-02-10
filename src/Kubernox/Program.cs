@@ -17,14 +17,18 @@ namespace Kubernox
         async static Task Main(string[] args)
         {
             PrintHeader();
+            await StartDeployment(await ExtractConfigurationAsync());
+        }
 
-            Configuration configuration = await ExtractConfigurationAsync();
-
+        private static async Task StartDeployment(Configuration configuration)
+        {
             var deploymentStack = new List<Task<bool>>();
 
             var cancellationToken = new CancellationToken();
             deploymentStack.Add(containerDeployService.InstantiateDatabaseContainer(configuration.Postgre, cancellationToken));
-            deploymentStack.Add(containerDeployService.InstantiatQueueContainer(configuration.Rabbitmq, cancellationToken));
+            deploymentStack.Add(containerDeployService.InstantiateQueueContainer(configuration.Rabbitmq, cancellationToken));
+            deploymentStack.Add(containerDeployService.InstantiateCacheContainer(configuration.Redis, cancellationToken));
+            deploymentStack.Add(containerDeployService.InstantiatePrometheusContainer(configuration.Prometheus, cancellationToken));
 
             var results = await Task.WhenAll(deploymentStack);
 

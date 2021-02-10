@@ -1,7 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces;
 using Application.Messages;
-using Datacenter.Service.Hubs;
+using Kubernox.Service.Hubs;
 using Domain.Entities;
 using Infrastructure.Contracts.Request;
 using Infrastructure.Contracts.Response;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Business
+namespace Kubernox.Service.Business
 {
     public class ClusterBusiness : IClusterBusiness
     {

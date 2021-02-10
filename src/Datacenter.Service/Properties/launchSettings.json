@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Datacenter.Service": {
+    "Kubernox.Service": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "environmentVariables": {

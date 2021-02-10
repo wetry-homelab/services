@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace Datacenter.Service.Hubs
+namespace Kubernox.Service.Hubs
 {
     public class AppHub : Hub<IAppHub>
     {

@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workers", "workers", "{3DEC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{E0E4F10E-D1B7-450B-877B-80D5547D683E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datacenter.Service", "src\Datacenter.Service\Datacenter.Service.csproj", "{E37C8C0D-472A-4F4D-B413-03EF92330593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kubernox.Service", "src\Datacenter.Service\Kubernox.Service.csproj", "{E37C8C0D-472A-4F4D-B413-03EF92330593}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Contracts", "src\Infrastructure.Contracts\Infrastructure.Contracts.csproj", "{70E1C040-6DF8-4B9E-85AE-BE743CF98F3B}"
 EndProject
