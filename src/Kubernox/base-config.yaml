@@ -1,0 +1,50 @@
+﻿#################################################################
+#                                                               #
+#     ____  __.    ___.                                         #
+#    |    |/ _|__ _\_ |__   ___________  ____   _______  ___    #
+#    |      < |  |  \ __ \_/ __ \_  __ \/    \ /  _ \  \/  /    #
+#    |    |  \|  |  / \_\ \  ___/|  | \/   |  (  <_> >    <     #
+#    |____|__ \____/|___  /\___  >__|  |___|  /\____/__/\_ \    #
+#            \/         \/     \/           \/            \/    #
+#                                                               #
+#          Created by David Gilson & Patrick Grasseels          #
+#                                                               #
+#################################################################
+
+# Github : https://github.com/wetry-homelab/kubernox
+
+
+# Configure database provider
+# Actually only Postgre is supported
+# If nothing is configured, provider deploy own Postgre container
+postgre:
+    # Default value : kubernox-db
+    host: kubernox-db
+    # Default value : kubernox
+    username: kubernox
+    # Default value : kubernoxDbPassword@0123
+    password: kubernoxDbPassword@0123
+    # Default value : kubernox
+    db_name: kubernox
+    # Default value : db_data
+    storage: db_data
+
+# Configure queue provider
+# Actually only RabbitMQ is supported
+# If nothing is configured, provider deploy own RabbitMQ container
+rabbitmq:
+    # Default value : kubernox-db
+    host: kubernox_rabbitmq
+    # Default value : kubernox
+    username: kubernox
+    # Default value : kubernoxRabbitMqPassword@0123
+    password: kubernoxRabbitMqPassword@0123
+
+# Configure cache provider
+# Actually only Redis is supported
+# If nothing is configured, provider deploy own Redis container
+redis:
+    # Default value : kubernox-db
+    host: kubernox_redis
+    # Default value : kubernox
+    password: kubernoxRedisPassword@0123

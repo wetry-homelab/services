@@ -41,7 +41,7 @@ namespace Datacenter.Service.Controllers
             if (!downloadConfig.found)
                 return NotFound();
 
-            if (downloadConfig.ready)
+            if (!downloadConfig.ready)
                 return BadRequest();
 
             return Ok(downloadConfig.file);

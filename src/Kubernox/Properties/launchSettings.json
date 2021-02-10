@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Kubernox": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
